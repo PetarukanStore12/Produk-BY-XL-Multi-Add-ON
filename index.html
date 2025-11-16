@@ -1,29 +1,48 @@
-<!DOCTYPE html>
+<!DOCTYPE Teks Berjalan Baru.html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Petarukan Store || Digital Online</title>
+<title>Petarukan Store || XL MULTI ADD ON</title>
 <style>
+/* --- PERBAIKAN ANTI-PERGESERAN LAYAR (FINAL) --- */
+html {
+    /* FIX: Memastikan ruang scrollbar vertikal selalu dicadangkan */
+    overflow-y: scroll; 
+}
 body {
   font-family: Arial, sans-serif;
   background: #F4F4F4;
   margin: 0;
   padding: 0;
 }
-body.modal-open { overflow: hidden; }
+body.modal-open { overflow: hidden; } 
 
-/* HEADER */
+/* --- PERBAIKAN HEADER TETAP (FIXED) --- */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100; /* Pastikan header selalu di atas konten dan modal */
   background: white;
-  padding: 10px;
+  padding: 8px;
   border-bottom: 1px solid #ddd;
+  box-sizing: border-box; /* Penting untuk menjaga lebar tetap 100% */
 }
+
+/* Penahan (Spacer) agar Konten Produk tidak tertutup Header Fixed */
+.content-spacer {
+    /* Tinggi ini harus disesuaikan dengan tinggi total header Anda */
+    margin-top: 170px; 
+}
+/* Akhir Perbaikan Header Tetap */
+
 .brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 5px; 
 }
 .logo { width: 48px; height: 48px; border-radius: 5px; overflow: hidden; }
 .logo img { width: 100%; height: 100%; object-fit: cover; }
@@ -35,31 +54,99 @@ body.modal-open { overflow: hidden; }
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  margin-bottom: 5px; 
 }
 
-/* TEKS BERJALAN */
+/* --- TEKS BERJALAN/PENGUMUMAN (MENARIK) --- */
 .welcome-text {
-  background: #ffffff;
-  font-weight: normal;
-  font-size: 14px;
-  color: #000;
-  height: 38px;
+  /* Perubahan visual utama */
+  background: linear-gradient(90deg, #0044FF, #001A9A); /* Gradien Biru */
+  box-shadow: 0 4px 8px rgba(0, 53, 255, 0.4); /* Shadow awal */
+  border-radius: 6px; /* Sudut sedikit melengkung */
+
+  font-weight: bold;
+  font-size: 14px; 
+  color: #fff;
+  height: 30px; 
+  display: flex; 
+  align-items: center; 
+  margin: 4px auto 8px auto; 
+  border: none;
+  width: 100%;
+  overflow: hidden; 
+  padding: 0 5px 0 10px; 
+  box-sizing: border-box;
+  animation: pulseShadow 2s infinite alternate; /* Animasi Glow Berkedip */
+}
+
+/* Keyframes untuk efek shadow berkedip */
+@keyframes pulseShadow {
+    0% { box-shadow: 0 4px 8px rgba(0, 53, 255, 0.4); }
+    100% { box-shadow: 0 4px 12px rgba(255, 255, 255, 0.7); } /* Efek glow putih halus */
+}
+
+/* STYLE IKON */
+.announcement-icon {
+    font-size: 18px; 
+    margin-right: 8px; 
+    flex-shrink: 0; 
+    /* Efek cahaya pada ikon */
+    text-shadow: 0 0 5px #FFFF00, 0 0 10px #FFD700; 
+}
+
+/* Container untuk teks yang akan berjalan */
+.marquee-container {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.marquee-content {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scrolling 12s linear infinite; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
+}
+@keyframes scrolling {
+    0% { transform: translateX(0%); } 
+    100% { transform: translateX(-100%); }
+}
+
+/* --- TANGGAL DAN JAM --- */
+.datetime-container {
+    background: none; 
+    text-align: center;
+    padding: 0 0 3px 0; 
+    font-size: 11px;
+    color: #555;
+    font-weight: normal;
+}
+
+/* --- ADMIN INFO ALERT BARU --- */
+.admin-alert {
+  margin: 10px 12px; /* Margin sama dengan padding grid */
+  padding: 10px 15px;
+  background-color: #fce4ec; /* Pink/Red Light */
+  color: #c2185b; /* Pink/Red Dark */
+  border: 1px solid #f8bbd0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  margin: 6px auto 8px auto;
-  border: none;
-  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
-.welcome-text marquee {
-  width: 100%;
-  white-space: nowrap;
-  display: block;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
+.alert-close {
+  background: none;
   border: none;
+  color: #c2185b;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-weight: bold;
 }
+/* --- AKHIR ADMIN INFO ALERT --- */
+
 
 /* GRID PRODUK */
 .produk-grid {
@@ -123,7 +210,7 @@ body.modal-open { overflow: hidden; }
   justify-content: center;
   align-items: center;
   padding: 10px;
-  z-index: 10;
+  z-index: 1000; /* Dibuat lebih tinggi dari header (100) */
   opacity: 0;
   transition: opacity .25s ease;
 }
@@ -183,21 +270,35 @@ body.modal-open { overflow: hidden; }
 
 <div class="header">
   <div class="brand">
-    <div class="logo"><img src="Logo.png" alt="Logo"></div>
+    <div class="logo"><img src="https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/giphy.gif" alt="Logo"></div> 
     <div class="store-info">
       <div class="store-name">PETARUKAN STORE</div>
       <div class="store-sub">Jl. Raya Petarukan Pemalang</div>
     </div>
   </div>
-  <input type="text" id="searchBox" class="search-box" placeholder="Cari produk...">
+  
+  <input type="text" id="searchBox" class="search-box" placeholder="Cari produk (nama atau kategori)...">
+  
   <div class="welcome-text">
-    <marquee behavior="scroll" direction="left" scrollamount="5">Selamat Datang di Petarukan Store - Selamat Berbelanja Paket Akrab Reguler Resmi - Full Garansi - Gasken Juragan!🚀</marquee>
+    <span class="announcement-icon">📢</span> 
+    <div class="marquee-container">
+        <p class="marquee-content">🚀 Transaksi Lancar Juragan! Stok Setiap Hari Ready - Paket Akrab ini Stoknya Mudah Habis - jangan sampai Kehabisan! Kalau Mau Kebagian Stok Keep langsung Hubungi Admin Satset 💪</p>
+    </div>
   </div>
+  
+  <div class="datetime-container" id="currentDateTime"></div>
+  
 </div>
 
-<div class="produk-grid" id="produkGrid"></div>
+<div class="content-spacer">
+    
+    <div class="admin-alert" id="adminNotification" style="display: none;">
+        <span>🔔 PEMBERITAHUAN ADMIN: Layanan Produk Akrab Ready Setiap Hari - Paket Akrab ini Stoknya Mudah habis Kalau mau Kebagian Stok Bisa Keep Hubungi Admin ya. Terima kasih!</span>
+        <button class="alert-close" onclick="dismissAlert()">×</button>
+    </div>
+    <div class="produk-grid" id="produkGrid"></div>
+</div>
 
-<!-- MODAL DETAIL -->
 <div class="modal" id="detailModal">
   <div class="modal-content">
     <button class="close-btn" onclick="tutupModal()">×</button>
@@ -209,21 +310,64 @@ body.modal-open { overflow: hidden; }
 </div>
 
 <script>
+// --- FUNGSIONALITAS TANGGAL & JAM ---
+function updateDateTime() {
+    const now = new Date();
+    const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: false 
+    };
+    const dateTimeString = now.toLocaleDateString('id-ID', options);
+    document.getElementById('currentDateTime').textContent = dateTimeString + ' WIB';
+}
+
+updateDateTime();
+setInterval(updateDateTime, 1000); 
+
+// --- FUNGSIONALITAS PEMBERITAHUAN ADMIN BARU ---
+function checkAlertStatus() {
+    const alert = document.getElementById('adminNotification');
+    // Cek apakah notifikasi pernah ditutup sebelumnya di browser ini
+    // Jika tidak ada di localStorage, maka tampilkan
+    if (localStorage.getItem('adminAlertDismissed') !== 'true') {
+        alert.style.display = 'flex';
+    }
+}
+
+function dismissAlert() {
+    const alert = document.getElementById('adminNotification');
+    alert.style.display = 'none';
+    // Simpan status bahwa notifikasi sudah ditutup (agar tidak muncul lagi)
+    localStorage.setItem('adminAlertDismissed', 'true');
+}
+
+// Panggil fungsi ini saat halaman dimuat
+document.addEventListener('DOMContentLoaded', checkAlertStatus);
+// --- AKHIR PEMBERITAHUAN ADMIN BARU ---
+
+// --- DATA PRODUK (Gambar Sudah Diganti dengan Link URL) ---
 const produkList = [
   {
     nama: "SUPER MINI",
     kategori: "PAKET AKRAB",
-    harga: 45000,
+    harga: 46500,
     stok: 1,
-    gambar: "Produk-SuperMini.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-supermini.png", 
     detail: `
       <p>Paket ini Khusus XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
-        <li>Area 1 = 15 GB</li>
-        <li>Area 2 = 17 GB</li>
-        <li>Area 3 = 22 GB</li>
-        <li>Area 4 = 32 GB</li>
+        <li>Area 1 = 13 - 15 GB</li>
+        <li>Area 2 = 15 - 17 GB</li>
+        <li>Area 3 = 20 - 22 GB</li>
+        <li>Area 4 = 30 - 32 GB</li>
       </ul>
       <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
       <p><strong>Keterangan:</strong></p>
@@ -242,17 +386,18 @@ const produkList = [
   {
     nama: "SUPER LITE",
     kategori: "PAKET AKRAB",
-    harga: 53000,
+    harga: 52000,
     stok: 1,
-    gambar: "Produk-SuperLite.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-superlite.png",
     detail: `
       <p>Paket ini Khusus XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
-        <li>Area 1 = 19-21 GB</li>
-        <li>Area 2 = 21-23 GB</li>
-        <li>Area 3 = 26-28 GB</li>
-        <li>Area 4 = 36-38 GB</li>
+        <li>Area 1 = 19 - 21 GB</li>
+        <li>Area 2 = 21 - 23 GB</li>
+        <li>Area 3 = 26 - 28 GB</li>
+        <li>Area 4 = 36 - 38 GB</li>
       </ul>
       <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
       <p><strong>Keterangan:</strong></p>
@@ -271,9 +416,10 @@ const produkList = [
   {
     nama: "MINI",
     kategori: "PAKET AKRAB",
-    harga: 60000,
+    harga: 63000,
     stok: 1,
-    gambar: "Produk-Mini.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-mini.png",
     detail: `
       <p>Paket ini Khusus XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
@@ -302,7 +448,8 @@ const produkList = [
     kategori: "PAKET AKRAB",
     harga: 65000,
     stok: 1,
-    gambar: "Produk-BIG.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-big.png",
     detail: `
       <p>Paket ini bisa untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
@@ -329,9 +476,10 @@ const produkList = [
   {
     nama: "LITE",
     kategori: "PAKET AKRAB",
-    harga: 70000,
+    harga: 71000,
     stok: 1,
-    gambar: "Produk-Lite.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-lite.png",
     detail: `
       <p>Paket XXL MINI untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
@@ -357,9 +505,10 @@ const produkList = [
   {
     nama: "JUMBO LITE",
     kategori: "PAKET AKRAB",
-    harga: 75000,
+    harga: 74000,
     stok: 1,
-    gambar: "Produk-JumboLite.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-jumbolite.png",
     detail: `
       <p>Paket XXL LITE resmi untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
@@ -385,11 +534,12 @@ const produkList = [
   {
     nama: "MAX",
     kategori: "PAKET AKRAB",
-    harga: 80000,
+    harga: 82000,
     stok: 1,
-    gambar: "Produk-Max.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-max.png",
     detail: `
-      <p>Paket XXL Jumbo Reward — kuota besar dan masa aktif 25-29 hari</p>
+      <p>Paket XXL LITE resmi untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
         <li>Area 1 = 63 - 65 GB</li>
@@ -415,9 +565,10 @@ const produkList = [
     kategori: "PAKET AKRAB",
     harga: 88000,
     stok: 1,
-    gambar: "Produk-Large.png",
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-large.png",
     detail: `
-      <p>Paket XXL Jumbo Super — kuota super besar!</p>
+      <p>Paket XXL LITE resmi untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
         <li>Area 1 = 76 - 78 GB</li>
@@ -439,13 +590,14 @@ const produkList = [
     `
   },
   {
-  nama: "JUMBO",
-  kategori: "PAKET AKRAB",
-  harga: 90000,
-  stok: 1,
-  gambar: "Produk-Jumbo.png",
-  detail: `
-      <p>Paket XXL Jumbo Super — kuota super besar!</p>
+    nama: "JUMBO",
+    kategori: "PAKET AKRAB",
+    harga: 90000,
+    stok: 1,
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-jumbo.png",
+    detail: `
+      <p>Paket XXL LITE resmi untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
         <li>Area 1 = 65 - 67 GB</li>
@@ -467,13 +619,14 @@ const produkList = [
     `
   },
   {
-  nama: "MEGA BIG",
-  kategori: "PAKET AKRAB",
-  harga: 97500,
-  stok: 1,
-  gambar: "Produk-MegaBig.png",
-  detail: `
-      <p>Paket XXL Jumbo Super — kuota super besar!</p>
+    nama: "MEGA BIG",
+    kategori: "PAKET AKRAB",
+    harga: 97500,
+    stok: 1,
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-megabig.png",
+    detail: `
+      <p>Paket XXL LITE resmi untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
         <li>Area 1 = 88 - 90 GB</li>
@@ -495,13 +648,14 @@ const produkList = [
     `
   },
   {
-  nama: "XTRA BIG",
-  kategori: "PAKET AKRAB",
-  harga: 127000,
-  stok: 1,
-  gambar: "Produk-XtraBig.png",
-  detail: `
-      <p>Paket XXL Jumbo Super — kuota super besar!</p>
+    nama: "XTRA BIG",
+    kategori: "PAKET AKRAB",
+    harga: 127000,
+    stok: 1,
+    // GANTI DENGAN LINK GAMBAR ASLI ANDA
+    gambar: "https://petarukanstoreimage.wordpress.com/wp-content/uploads/2025/11/produk-xtrabig.png",
+    detail: `
+      <p>Paket XXL LITE resmi untuk XL & Axis</p>
       <p><strong>Detail Paket:</strong></p>
       <ul>
         <li>Area 1 = 105 - 107 GB</li>
@@ -526,44 +680,76 @@ const produkList = [
 
 const produkGrid = document.getElementById("produkGrid");
 
+// --- FUNGSI UTAMA UNTUK MERENDER PRODUK ---
 function renderProduk(list) {
   produkGrid.innerHTML = "";
+  if (list.length === 0) {
+      produkGrid.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #555; margin-top: 20px;">Produk tidak ditemukan.</p>';
+      return;
+  }
+  
   const kategoriList = [...new Set(list.map(p => p.kategori))];
 
   kategoriList.forEach(kat => {
-    const title = document.createElement("div");
-    title.className = "kategori-title";
-    title.textContent = `PRODUK ${kat}`;
-    produkGrid.appendChild(title);
+    // Hanya tampilkan kategori jika ada produk yang cocok di dalamnya
+    const produkInKategori = list.filter(p => p.kategori === kat);
+    if (produkInKategori.length > 0) {
+        const title = document.createElement("div");
+        title.className = "kategori-title";
+        title.textContent = `PRODUK ${kat}`;
+        produkGrid.appendChild(title);
 
-    list.filter(p => p.kategori === kat).forEach(p => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-      card.innerHTML = `
-        <span class="stok-label ${p.stok > 0 ? 'stok-ready' : 'stok-habis'}">
-          ${p.stok > 0 ? 'STATUS: READY' : 'STATUS: HABIS'}
-        </span>
-        <img src="${p.gambar}" alt="${p.nama}">
-        <div class="card-content">
-          <h3>${p.nama}</h3>
-          <p>Paket data ${p.nama} untuk XL & Axis</p>
-        </div>
-        <div class="card-buttons">
-          <button class="btn btn-detail">DETAIL</button>
-          <button class="btn btn-order" ${p.stok === 0 ? 'disabled' : ''}>KLIK ORDER</button>
-        </div>
-      `;
-      // DETAIL selalu aktif
-      card.querySelector(".btn-detail").addEventListener("click", () => bukaModal(p));
-      // ORDER hanya aktif jika stok tersedia
-      if (p.stok > 0) {
-        card.querySelector(".btn-order").addEventListener("click", () => kirimWA(p));
-      }
-      produkGrid.appendChild(card);
-    });
+        produkInKategori.forEach(p => {
+          const card = document.createElement("div");
+          card.classList.add("card");
+          card.innerHTML = `
+            <span class="stok-label ${p.stok > 0 ? 'stok-ready' : 'stok-habis'}">
+              ${p.stok > 0 ? 'STATUS: READY' : 'STATUS: HABIS'}
+            </span>
+            <img src="${p.gambar}" alt="${p.nama}">
+            <div class="card-content">
+              <h3>${p.nama}</h3>
+              <p>Paket data ${p.nama} untuk XL & Axis</p>
+            </div>
+            <div class="card-buttons">
+              <button class="btn btn-detail">DETAIL</button>
+              <button class="btn btn-order" ${p.stok === 0 ? 'disabled' : ''}>KLIK ORDER</button>
+            </div>
+          `;
+          // DETAIL selalu aktif
+          card.querySelector(".btn-detail").addEventListener("click", () => bukaModal(p));
+          // ORDER hanya aktif jika stok tersedia
+          if (p.stok > 0) {
+            card.querySelector(".btn-order").addEventListener("click", () => kirimWA(p));
+          }
+          produkGrid.appendChild(card);
+        });
+    }
   });
 }
 
+// --- FUNGSI PENCARIAN (FILTER) ---
+function filterProduk() {
+    const searchTerm = document.getElementById('searchBox').value.toLowerCase().trim();
+    
+    if (searchTerm === "") {
+        renderProduk(produkList); // Tampilkan semua jika kosong
+        return;
+    }
+
+    const filteredList = produkList.filter(p => 
+        p.nama.toLowerCase().includes(searchTerm) || // Cari berdasarkan Nama Produk
+        p.kategori.toLowerCase().includes(searchTerm) // Cari berdasarkan Nama Kategori
+    );
+    
+    renderProduk(filteredList);
+}
+
+// Tambahkan event listener ke kotak pencarian
+document.getElementById('searchBox').addEventListener('keyup', filterProduk);
+
+
+// --- FUNGSIONALITAS MODAL & WHATSAPP (Tidak Berubah) ---
 function bukaModal(p) {
   document.getElementById("modalImg").src = p.gambar;
   document.getElementById("modalNama").textContent = p.nama;
@@ -590,6 +776,7 @@ function kirimWA(p) {
   window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`, "_blank");
 }
 
+// Panggil pertama kali untuk merender semua produk
 renderProduk(produkList);
 </script>
 </body>
