@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petarukan Store || Digital Online</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #F4F4F4;
+  margin: 0;
+  padding: 0;
+}
+body.modal-open { overflow: hidden; }
+
+/* HEADER */
+.header {
+  background: white;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.logo { width: 48px; height: 48px; border-radius: 5px; overflow: hidden; }
+.logo img { width: 100%; height: 100%; object-fit: cover; }
+.store-info { display: flex; flex-direction: column; }
+.store-name { font-size: 20px; font-weight: bold; }
+.store-sub { font-size: 12px; color: #555; }
+.search-box {
+  width: 90%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* TEKS BERJALAN */
+.welcome-text {
+  background: #ffffff;
+  font-weight: normal;
+  font-size: 14px;
+  color: #000;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 6px auto 8px auto;
+  border: none;
+  width: 100%;
+}
+.welcome-text marquee {
+  width: 100%;
+  white-space: nowrap;
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  border: none;
+}
+
+/* GRID PRODUK */
+.produk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+.card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: relative;
+}
+.card img { width: 100%; height: 140px; object-fit: cover; }
+.stok-label {
+  position: absolute;
+  top: 8px; left: 8px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+}
+.stok-habis { background: #e53935; }
+.stok-ready { background: #43a047; }
+.card-content { padding: 8px; }
+.card-content h3 { font-size: 14px; margin: 0; }
+.card-content p  { font-size: 11px; color: #666; margin: 4px 0; }
+.card-buttons {
+  display: flex; justify-content: space-between; padding: 8px; gap: 5px;
+}
+.btn {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-detail { background: #1508DA; color: #F7F7F7; }
+.btn-order  { background: #d32f2f; color: white; }
+
+/* Tombol nonaktif (abu-abu kalau stok 0) */
+.btn-order[disabled] {
+  background: #bdbdbd !important;
+  color: #f0f0f0 !important;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* MODAL DETAIL */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.modal.show { opacity: 1; }
+.modal-content {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  max-width: 340px;
+  width: 100%;
+  position: relative;
+  text-align: left;
+  overflow-y: auto;
+  max-height: 80vh;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transform: scale(0.9);
+  transition: transform .25s ease;
+}
+.modal.show .modal-content { transform: scale(1); }
+.modal-content img {
+  display: block;
+  width: 110px; height: 110px; object-fit: cover;
+  border-radius: 8px; margin: 0 auto 8px;
+}
+.modal-content h3 { text-align: center; font-size: 16px; margin: 5px 0 10px; }
+.modal-content p, .modal-content ul { font-size: 12.5px; line-height: 1.4; margin: 4px 0; }
+.modal-content ul { padding-left: 18px; }
+.close-btn {
+  position: absolute; top: 6px; right: 6px; background: #ccc; border: none;
+  border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 14px;
+}
+.harga { font-weight: bold; text-align: center; font-size: 14px; color: #111; margin-top: 10px; }
+
+/* TITLE KATEGORI */
+.kategori-title {
+  width: 70%;
+  grid-column: span 2;
+  text-align: center;
+  background: #0035FF;
+  color: #FFFFFF;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin: 10px auto;
+  font-size: 13px;
+}
+
+/* Responsif */
+@media (max-width: 450px) {
+  .modal-content { max-width: 92%; padding: 12px; max-height: 75vh; }
+  .modal-content h3 { font-size: 15px; }
+  .modal-content p, .modal-content ul { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <div class="logo"><img src="Logo.png" alt="Logo"></div>
+    <div class="store-info">
+      <div class="store-name">PETARUKAN STORE</div>
+      <div class="store-sub">Jl. Raya Petarukan Pemalang</div>
+    </div>
+  </div>
+  <input type="text" id="searchBox" class="search-box" placeholder="Cari produk...">
+  <div class="welcome-text">
+    <marquee behavior="scroll" direction="left" scrollamount="5">Selamat Datang di Petarukan Store - Selamat Berbelanja Paket Akrab Reguler Resmi - Full Garansi - Gasken Juragan!🚀</marquee>
+  </div>
+</div>
+
+<div class="produk-grid" id="produkGrid"></div>
+
+<!-- MODAL DETAIL -->
+<div class="modal" id="detailModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="tutupModal()">×</button>
+    <img id="modalImg" src="" alt="">
+    <h3 id="modalNama"></h3>
+    <div id="modalIsi"></div>
+    <p class="harga" id="modalHarga"></p>
+  </div>
+</div>
+
+<script>
+const produkList = [
+  {
+    nama: "Akrab L Basic",
+    kategori: "PAKET AKRAB L",
+    harga: 45000,
+    stok: 0,
+    gambar: "Produk1.png",
+    detail: `
+      <p>Paket ini Khusus XL & Axis</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 15 GB</li>
+        <li>Area 2 = 17 GB</li>
+        <li>Area 3 = 22 GB</li>
+        <li>Area 4 = 32 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Masa Aktif 28 Hari</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "Akrab L Biasa",
+    kategori: "PAKET AKRAB L",
+    harga: 62000,
+    stok: 0,
+    gambar: "Produk2.png",
+    detail: `
+      <p>Paket ini Khusus XL & Axis</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 38–40 GB</li>
+        <li>Area 2 = 40–42 GB</li>
+        <li>Area 3 = 45–47 GB</li>
+        <li>Area 4 = 55–57 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Masa Aktif 28 Hari</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "Akrab Mega L",
+    kategori: "PAKET AKRAB L",
+    harga: 82000,
+    stok: 0,
+    gambar: "Produk3.png",
+    detail: `
+      <p>Paket ini Khusus XL & Axis</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 63–65 GB</li>
+        <li>Area 2 = 65–67 GB</li>
+        <li>Area 3 = 70–72 GB</li>
+        <li>Area 4 = 80–82 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Masa Aktif 28 Hari</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "Akrab Super L",
+    kategori: "PAKET AKRAB L",
+    harga: 94000,
+    stok: 0,
+    gambar: "Produk4.png",
+    detail: `
+      <p>Paket ini bisa untuk XL & Axis</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 88–90 GB</li>
+        <li>Area 2 = 90–92 GB</li>
+        <li>Area 3 = 95–97 GB</li>
+        <li>Area 4 = 105–107 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Masa Aktif 28 Hari</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "XXL MINI",
+    kategori: "PAKET AKRAB XXL",
+    harga: 67000,
+    stok: 0,
+    gambar: "Produk5.png",
+    detail: `
+      <p>Paket XXL MINI untuk XL & Axis</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 27 GB</li>
+        <li>Area 2 = 32 GB</li>
+        <li>Area 3 = 45 GB</li>
+        <li>Area 4 = 85 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "XXL LITE",
+    kategori: "PAKET AKRAB XXL",
+    harga: 76000,
+    stok: 0,
+    gambar: "Produk6.png",
+    detail: `
+      <p>Paket XXL LITE resmi untuk XL & Axis</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 47.5 GB</li>
+        <li>Area 2 = 52 GB</li>
+        <li>Area 3 = 60.5 GB</li>
+        <li>Area 4 = 105 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "XXL JUMBO REWARD",
+    kategori: "PAKET AKRAB XXL",
+    harga: 83000,
+    stok: 0,
+    gambar: "Produk7.png",
+    detail: `
+      <p>Paket XXL Jumbo Reward — kuota besar dan masa aktif 25-29 hari</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 65.5–67.5 GB</li>
+        <li>Area 2 = 70–72 GB</li>
+        <li>Area 3 = 83–85 GB</li>
+        <li>Area 4 = 123–125 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  },
+  {
+    nama: "XXL JUMBO SUPER",
+    kategori: "PAKET AKRAB XXL",
+    harga: 88000,
+    stok: 0,
+    gambar: "Produk8.png",
+    detail: `
+      <p>Paket XXL Jumbo Super — kuota super besar!</p>
+      <p><strong>Detail Paket:</strong></p>
+      <ul>
+        <li>Area 1 = 85.5–87.5 GB</li>
+        <li>Area 2 = 90–92 GB</li>
+        <li>Area 3 = 103–105 GB</li>
+        <li>Area 4 = 143–145 GB</li>
+      </ul>
+      <p>Silahkan cek area kalian di sini:<br><a href="https://cekarea-jade.vercel.app/" target="_blank">https://cekarea-jade.vercel.app/</a></p>
+      <p><strong>Keterangan:</strong></p>
+      <ul>
+        <li>✓ Paket ini Official Resmi Bergaransi</li>
+        <li>✓ Full Reguler</li>
+        <li>✓ Kuota Masuk ± 5 Menit Dari Pengelola</li>
+        <li>✓ Bonus Kuota My Rewards</li>
+        <li>✓ Reward tidak masuk, tunggu 1x24 jam sebelum komplain.</li>
+        <li>✓ Pastikan nomor sesuai — kesalahan nomor bukan tanggung jawab kami.</li>
+        <li>✓ Jika masih ada paket akrab aktif dari pengelola lain, wajib UNREG dahulu.</li>
+      </ul>
+    `
+  }
+];
+
+const produkGrid = document.getElementById("produkGrid");
+
+function renderProduk(list) {
+  produkGrid.innerHTML = "";
+  const kategoriList = [...new Set(list.map(p => p.kategori))];
+
+  kategoriList.forEach(kat => {
+    const title = document.createElement("div");
+    title.className = "kategori-title";
+    title.textContent = `PRODUK ${kat}`;
+    produkGrid.appendChild(title);
+
+    list.filter(p => p.kategori === kat).forEach(p => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `
+        <span class="stok-label ${p.stok > 0 ? 'stok-ready' : 'stok-habis'}">
+          ${p.stok > 0 ? 'STATUS: READY' : 'STATUS: HABIS'}
+        </span>
+        <img src="${p.gambar}" alt="${p.nama}">
+        <div class="card-content">
+          <h3>${p.nama}</h3>
+          <p>Paket data ${p.nama} untuk XL & Axis</p>
+        </div>
+        <div class="card-buttons">
+          <button class="btn btn-detail">DETAIL</button>
+          <button class="btn btn-order" ${p.stok === 0 ? 'disabled' : ''}>KLIK ORDER</button>
+        </div>
+      `;
+      // DETAIL selalu aktif
+      card.querySelector(".btn-detail").addEventListener("click", () => bukaModal(p));
+      // ORDER hanya aktif jika stok tersedia
+      if (p.stok > 0) {
+        card.querySelector(".btn-order").addEventListener("click", () => kirimWA(p));
+      }
+      produkGrid.appendChild(card);
+    });
+  });
+}
+
+function bukaModal(p) {
+  document.getElementById("modalImg").src = p.gambar;
+  document.getElementById("modalNama").textContent = p.nama;
+  document.getElementById("modalIsi").innerHTML = p.detail;
+  document.getElementById("modalHarga").textContent = `Harga: Rp ${p.harga.toLocaleString('id-ID')}`;
+  const modal = document.getElementById("detailModal");
+  modal.style.display = "flex";
+  document.body.classList.add("modal-open");
+  setTimeout(() => modal.classList.add("show"), 10);
+}
+
+function tutupModal() {
+  const modal = document.getElementById("detailModal");
+  modal.classList.remove("show");
+  setTimeout(() => {
+    modal.style.display = "none";
+    document.body.classList.remove("modal-open");
+  }, 200);
+}
+
+function kirimWA(p) {
+  const nomor = "6285643838017";
+  const pesan = `Halo Kak, Saya mau Order produk ini - Apakah Ready?\n${p.nama}\nHarga: Rp ${p.harga.toLocaleString('id-ID')}`;
+  window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`, "_blank");
+}
+
+renderProduk(produkList);
+</script>
+</body>
+</html>
